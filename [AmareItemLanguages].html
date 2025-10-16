@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Generator - AmareItemLanguages</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2; /* A nice blue for dark mode */
+            --secondary-color: #2c3e50; /* Darker element background */
+            --border-color: #444;
+            --text-color: #ecf0f1; /* Light text */
+            --bg-color: #1e1e1e; /* Container background */
+            --button-hover: #3a7bc8;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212; /* Dark page background */
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--bg-color); /* Dark container background */
+            padding: 30px; 
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        h6 {
+            text-align: center;
+            color: #95a5a6;
+            font-weight: 400;
+            margin-top: -15px;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1; /* Span across all columns */
+        }
+        .tab-container {
+            margin-top: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .tab-button {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            color: #bdc3c7;
+            font-size: 14px;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px; /* Overlap with container border */
+        }
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            font-weight: bold;
+        }
+        .tab-panel {
+            display: none;
+            padding: 20px 5px;
+            border-top: none;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+        .tab-panel .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #bdc3c7; /* Lighter grey for labels */
+        }
+        input[type="number"],
+        input[type="text"],
+        textarea {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: #2c3e50;
+            color: var(--text-color);
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+        .secondary-button {
+            background-color: #7f8c8d;
+        }
+        .secondary-button:hover {
+            background-color: #6c7a7b;
+        }
+        .danger-button {
+            background-color: #c0392b;
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+        .danger-button:hover {
+            background-color: #a93226;
+        }
+        .history-container {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 20px;
+            background-color: var(--bg-color);
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .history-container h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        #historyList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        #historyList li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        #historyList li:last-child {
+            border-bottom: none;
+        }
+        #historyList .history-item-info {
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+        .output-container {
+            margin-top: 30px;
+            position: relative;
+        }
+        #copyButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #5cb85c;
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+        #copyButton:hover {
+            background-color: #4cae4c;
+        }
+        pre {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 14px;
+        }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.5s, transform 0.5s;
+            visibility: hidden;
+        }
+        .notification.show {
+            opacity: 1;
+            transform: translate(-50%, -10px);
+            visibility: visible;
+        }
+        footer {
+            width: 100%;
+            max-width: 900px;
+            margin-top: auto; /* Pushes footer to the bottom */
+            text-align: center;
+            padding-top: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>AmareItemLanguages Script Generator</h1>
+        <h6>Works only for EU for now</h6>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="itemId">ItemID</label>
+                <input type="number" id="itemId" placeholder="e.g., 743">
+            </div>
+            <div class="form-group">
+                <label for="itemDescription">ItemDescription</label>
+                <input type="text" id="itemDescription" placeholder="e.g., Restore">
+            </div>
+        </div>
+
+        <div id="tabs-container" class="tab-container">
+            <!-- Tabs will be generated here by JavaScript -->
+        </div>
+        
+        <div class="button-container">
+            <button id="generateButton">Generate Scripts</button>
+            <button id="clearButton" class="secondary-button">Clear All Fields</button>
+        </div>
+
+        <div class="output-container">
+            <button id="copyButton" style="display:none;">Copy</button>
+            <pre><code id="output">-- Generated scripts will be displayed here...</code></pre>
+        </div>
+    </div>
+
+    <div class="history-container">
+        <h3>History</h3>
+        <ul id="historyList">
+            <!-- History items will be populated here -->
+        </ul>
+    </div>
+
+    <div id="copyNotification" class="notification">Copied to clipboard!</div>
+
+    <footer>
+        <p>Tool created by Orlando Calvo</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const languages = [
+            { id: 6, name: 'French' },
+            { id: 18, name: 'Dutch' },
+            { id: 203, name: 'Czech Republic' },
+            { id: 214, name: 'English - Great Britain' },
+            { id: 226, name: 'English-Luxembourg' },
+            { id: 227, name: 'German - Austria' },
+            { id: 228, name: 'German - Switzerland' },
+            { id: 229, name: 'German - Liechtenstein' },
+            { id: 231, name: 'Italian - Italy' },
+            { id: 232, name: 'Spanish - Spain' },
+            { id: 233, name: 'Hungarian - Hungary' },
+            { id: 235, name: 'English - Ireland' },
+            { id: 237, name: 'Romanian - Romania' },
+            { id: 238, name: 'Dutch - Belgium' }
+        ];
+
+        const generateButton = document.getElementById('generateButton');
+        const copyButton = document.getElementById('copyButton');
+            const outputCode = document.getElementById('output');
+            const tabsContainer = document.getElementById('tabs-container');
+            const historyList = document.getElementById('historyList');
+            const clearButton = document.getElementById('clearButton');
+
+            // Create Tabs and Panels
+            const tabButtons = document.createElement('div');
+            tabButtons.className = 'tab-buttons';
+            const tabContent = document.createElement('div');
+            tabContent.className = 'tab-content';
+
+            languages.forEach((lang, index) => {
+                // Create Button
+                const button = document.createElement('button');
+                button.className = 'tab-button';
+                button.textContent = lang.name;
+                button.dataset.langId = lang.id;
+                tabButtons.appendChild(button);
+
+                // Create Panel
+                const panel = document.createElement('div');
+                panel.className = 'tab-panel';
+                panel.dataset.langId = lang.id;
+                panel.innerHTML = `
+                    <div class="form-group">
+                        <label for="shortDetail-${lang.id}">ShortDetail</label>
+                        <textarea id="shortDetail-${lang.id}" data-field="shortDetail" placeholder="Enter ShortDetail for ${lang.name}..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="longDetail-${lang.id}">LongDetail (HTML allowed)</label>
+                        <textarea id="longDetail-${lang.id}" data-field="longDetail" placeholder="Enter LongDetail for ${lang.name}..."></textarea>
+                    </div>
+                `;
+                tabContent.appendChild(panel);
+
+                if (index === 0) {
+                    button.classList.add('active');
+                    panel.classList.add('active');
+                }
+            });
+
+            tabsContainer.appendChild(tabButtons);
+            tabsContainer.appendChild(tabContent);
+
+            // Tab switching logic
+            tabButtons.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tab-button')) {
+                    const targetLangId = e.target.dataset.langId;
+                    
+                    tabButtons.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    tabContent.querySelectorAll('.tab-panel').forEach(pnl => pnl.classList.remove('active'));
+
+                    e.target.classList.add('active');
+                    tabContent.querySelector(`.tab-panel[data-lang-id="${targetLangId}"]`).classList.add('active');
+                }
+            });
+
+            // Function to escape single quotes for SQL
+            const escapeSql = (str) => str.replace(/'/g, "''");
+
+            const STORAGE_KEY = 'amareScriptHistory';
+
+            const renderHistory = () => {
+                historyList.innerHTML = '';
+                const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                if (history.length === 0) {
+                    historyList.innerHTML = '<li>No history yet.</li>';
+                    return;
+                }
+
+                history.forEach(item => {
+                    const li = document.createElement('li');
+                    const date = new Date(item.timestamp).toLocaleString();
+                    li.innerHTML = `
+                        <span class="history-item-info"><strong>ID:</strong> ${item.itemId} - <em>${date}</em></span>
+                        <div>
+                            <button class="secondary-button load-btn" data-timestamp="${item.timestamp}">Load</button>
+                            <button class="danger-button delete-btn" data-timestamp="${item.timestamp}">Delete</button>
+                        </div>
+                    `;
+                    historyList.appendChild(li);
+                });
+            };
+
+            const saveToHistory = (data) => {
+                let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                // Add new item to the beginning of the array
+                history.unshift(data);
+                // Keep history to a reasonable size, e.g., 20 items
+                if (history.length > 20) {
+                    history.pop();
+                }
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+                renderHistory();
+            };
+
+            const loadFromHistory = (timestamp) => {
+                const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                const item = history.find(h => h.timestamp == timestamp);
+                if (item) {
+                    document.getElementById('itemId').value = item.itemId;
+                    document.getElementById('itemDescription').value = item.itemDescription;
+                    item.languageData.forEach(langData => {
+                        const shortDetailEl = document.getElementById(`shortDetail-${langData.id}`);
+                        const longDetailEl = document.getElementById(`longDetail-${langData.id}`);
+                        if (shortDetailEl) shortDetailEl.value = langData.shortDetail;
+                        if (longDetailEl) longDetailEl.value = langData.longDetail;
+                    });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+
+            const deleteFromHistory = (timestamp) => {
+                let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                history = history.filter(h => h.timestamp != timestamp);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+                renderHistory();
+            };
+
+            generateButton.addEventListener('click', () => {
+                const itemId = document.getElementById('itemId').value;
+                const itemDescription = document.getElementById('itemDescription').value;
+
+                if (!itemId) {
+                    alert('Please enter an ItemID.');
+                    return;
+                }
+
+                let scripts = `-- Scripts generated for ItemID: ${itemId}\n\n`;
+                let scriptGenerated = false;
+                const languageDataForHistory = [];
+
+                languages.forEach(lang => {
+                    const shortDetail = document.getElementById(`shortDetail-${lang.id}`).value;
+                    let longDetail = document.getElementById(`longDetail-${lang.id}`).value;
+
+                    if (shortDetail.trim() !== '') {
+                        scriptGenerated = true;
+                        languageDataForHistory.push({
+                            id: lang.id,
+                            shortDetail: shortDetail,
+                            longDetail: longDetail
+                        });
+
+                        const trimmedLongDetail = longDetail.trim();
+                        if (trimmedLongDetail && !trimmedLongDetail.startsWith('<p>') && !trimmedLongDetail.endsWith('</p>')) {
+                            longDetail = `<p>${trimmedLongDetail}</p>`;
+                        }
+
+                        scripts += `-- Language: ${lang.name} (${lang.id})\n`;
+                        scripts += `INSERT INTO [AmareReporting].[ExigoWebContext].[AmareItemLanguages] 
+    ([ItemID], [LanguageID], [ItemDescription], [ShortDetail], [LongDetail])
+VALUES 
+    (${itemId}, ${lang.id}, N'${escapeSql(itemDescription)}', N'${escapeSql(shortDetail)}', N'${escapeSql(longDetail)}');\n\n`;
+                    }
+                });
+
+                if (scriptGenerated) {
+                    const historyEntry = {
+                        timestamp: Date.now(),
+                        itemId: itemId,
+                        itemDescription: itemDescription,
+                        languageData: languageDataForHistory
+                    };
+                    saveToHistory(historyEntry);
+                }
+
+                if (!scriptGenerated) {
+                    scripts += '-- No content was entered in any language tab. No scripts generated.';
+                }
+
+                outputCode.textContent = scripts;
+                copyButton.style.display = 'block';
+            });
+
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(outputCode.textContent).then(() => {
+                    const notification = document.getElementById('copyNotification');
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Error copying text: ', err);
+                    alert('Could not copy the text.');
+                });
+            });
+
+            historyList.addEventListener('click', (e) => {
+                const timestamp = e.target.dataset.timestamp;
+                if (e.target.classList.contains('load-btn')) {
+                    loadFromHistory(timestamp);
+                }
+                if (e.target.classList.contains('delete-btn')) {
+                    if (confirm('Are you sure you want to delete this history item?')) {
+                        deleteFromHistory(timestamp);
+                    }
+                }
+            });
+
+            clearButton.addEventListener('click', () => {
+                document.getElementById('itemId').value = '';
+                document.getElementById('itemDescription').value = '';
+                document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+            });
+
+            renderHistory(); // Initial render on page load
+        });
+    </script>
+
+</body>
+</html>
