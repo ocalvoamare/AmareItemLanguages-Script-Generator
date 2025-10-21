@@ -258,8 +258,18 @@
 
     <div class="container">
         <h1>AmareItemLanguages Script Generator</h1>
-        <h6>Works only for EU for now</h6>
-        
+                
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label for="regionSelect">Country</label>
+                <select id="regionSelect" style="padding: 12px; border: 1px solid var(--border-color); border-radius: 5px; background-color: #2c3e50; color: var(--text-color); font-size: 16px; width: 100%; box-sizing: border-box;">
+                    <option value="europe">Europe</option>
+                    <option value="turkish">Turkish</option>
+                    <option value="all">All</option>
+                </select>
+            </div>
+        </div>
+
         <div class="form-grid">
             <div class="form-group">
                 <label for="itemId">ItemID</label>
@@ -301,86 +311,146 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-        const languages = [
-            { id: 6, name: 'French' },
-            { id: 18, name: 'Dutch' },
-            { id: 203, name: 'Czech Republic' },
-            { id: 214, name: 'English - Great Britain' },
-            { id: 226, name: 'English-Luxembourg' },
-            { id: 227, name: 'German - Austria' },
-            { id: 228, name: 'German - Switzerland' },
-            { id: 229, name: 'German - Liechtenstein' },
-            { id: 231, name: 'Italian - Italy' },
-            { id: 232, name: 'Spanish - Spain' },
-            { id: 233, name: 'Hungarian - Hungary' },
-            { id: 235, name: 'English - Ireland' },
-            { id: 237, name: 'Romanian - Romania' },
-            { id: 238, name: 'Dutch - Belgium' }
-        ];
+            const languageDataSets = {
+                europe: [
+                    { id: 6, name: 'French' }, { id: 18, name: 'Dutch' }, { id: 203, name: 'Czech Republic' },
+                    { id: 214, name: 'English - Great Britain' }, { id: 226, name: 'English-Luxembourg' },
+                    { id: 227, name: 'German - Austria' }, { id: 228, name: 'German - Switzerland' },
+                    { id: 229, name: 'German - Liechtenstein' }, { id: 231, name: 'Italian - Italy' },
+                    { id: 232, name: 'Spanish - Spain' }, { id: 233, name: 'Hungarian - Hungary' },
+                    { id: 235, name: 'English - Ireland' }, { id: 237, name: 'Romanian - Romania' },
+                    { id: 238, name: 'Dutch - Belgium' }
+                ],
+                turkish: [
+                    { id: 225, name: 'English-Turkey' }
+                ],
+                all: [
+                    { id: 0, name: 'English' }, { id: 1, name: 'Spanish' }, { id: 2, name: 'German' },
+                    { id: 3, name: 'Korean' }, { id: 4, name: 'Belorussian' }, { id: 5, name: 'Japanese' },
+                    { id: 6, name: 'French' }, { id: 7, name: 'Mandarin' }, { id: 8, name: 'Chinese-Taiwan' },
+                    { id: 9, name: 'Thai' }, { id: 10, name: 'Tagalec-Phillipino' }, { id: 11, name: 'Hungarian' },
+                    { id: 12, name: 'Finnish' }, { id: 13, name: 'Norsk' }, { id: 14, name: 'Malay' },
+                    { id: 15, name: 'Indonesian' }, { id: 16, name: 'Portuguese' }, { id: 17, name: 'Italian' },
+                    { id: 18, name: 'Dutch' }, { id: 19, name: 'Russian' }, { id: 20, name: 'Slovakia' },
+                    { id: 21, name: 'Cyrillic' }, { id: 22, name: 'Estonian' }, { id: 23, name: 'Bulgarian' },
+                    { id: 24, name: 'Vietnamese' }, { id: 25, name: 'Polish' }, { id: 26, name: 'Swedish' },
+                    { id: 27, name: 'Turkish' }, { id: 61, name: 'Tamil – India' }, { id: 62, name: 'Hindi – India' },
+                    { id: 65, name: 'Hebrew-Israel' }, { id: 66, name: 'Greek - Greece' }, { id: 80, name: 'English - Malaysia' },
+                    { id: 81, name: 'Chinese - Malaysia' }, { id: 82, name: 'Malay' }, { id: 83, name: 'English - Serbia' },
+                    { id: 84, name: 'Serbian' }, { id: 85, name: 'English - Latvia' }, { id: 86, name: 'Latvian' },
+                    { id: 87, name: 'English - Puerto Rico' }, { id: 89, name: 'English - Thailand' },
+                    { id: 91, name: 'English - Taiwan' }, { id: 93, name: 'English - Brazil' },
+                    { id: 94, name: 'Portuguese - Brazil' }, { id: 203, name: 'Czech Republic' },
+                    { id: 204, name: 'Chinese (Simplified)' }, { id: 205, name: 'Chinese (Traditional)' },
+                    { id: 206, name: 'English - India' }, { id: 207, name: 'English - United Arab Emirates' },
+                    { id: 208, name: 'French – Canada' }, { id: 209, name: 'Croatian' }, { id: 210, name: 'Lithuanian' },
+                    { id: 211, name: 'Romanian' }, { id: 212, name: 'Danish' }, { id: 213, name: 'English - United States' },
+                    { id: 214, name: 'English - Great Britain' }, { id: 215, name: 'English - Canada' },
+                    { id: 216, name: 'Icelandic' }, { id: 217, name: 'Spanish-United States' },
+                    { id: 218, name: 'Spanish-DominicanReplubic' }, { id: 219, name: 'Spanish-Mexico' },
+                    { id: 220, name: 'Spanish-Guatemala' }, { id: 221, name: 'English-Ireland' },
+                    { id: 222, name: 'Chinese - US' }, { id: 223, name: 'Chinese - Australia' },
+                    { id: 224, name: 'English - Australia' }, { id: 225, name: 'English-Turkey' },
+                    { id: 226, name: 'English-Luxembourg' }, { id: 227, name: 'German - Austria' },
+                    { id: 228, name: 'German - Switzerland' }, { id: 229, name: 'German - Liechtenstein' },
+                    { id: 230, name: 'German - Germany' }, { id: 231, name: 'Italian - Italy' },
+                    { id: 232, name: 'Spanish - Spain' }, { id: 233, name: 'Hungarian - Hungary' },
+                    { id: 235, name: 'English - Ireland' }, { id: 236, name: 'English - Romania' },
+                    { id: 237, name: 'Romanian - Romania' }, { id: 238, name: 'Dutch - Belgium' },
+                    { id: 239, name: 'English - Singapore' }, { id: 240, name: 'English - Philippines' },
+                    { id: 241, name: 'Chinese (Traditional) - Hong Kong' }
+                ]
+            };
 
-        const generateButton = document.getElementById('generateButton');
-        const copyButton = document.getElementById('copyButton');
+            let currentGroupedLanguages = [];
+            const generateButton = document.getElementById('generateButton');
+            const copyButton = document.getElementById('copyButton');
             const outputCode = document.getElementById('output');
             const tabsContainer = document.getElementById('tabs-container');
             const historyList = document.getElementById('historyList');
             const clearButton = document.getElementById('clearButton');
+            const regionSelect = document.getElementById('regionSelect');
 
-            // Create Tabs and Panels
-            const tabButtons = document.createElement('div');
-            tabButtons.className = 'tab-buttons';
-            const tabContent = document.createElement('div');
-            tabContent.className = 'tab-content';
+            function setupTabs(groupedLanguages) {
+                tabsContainer.innerHTML = ''; // Clear existing tabs
+                if (groupedLanguages.length === 0) return;
 
-            languages.forEach((lang, index) => {
-                // Create Button
-                const button = document.createElement('button');
-                button.className = 'tab-button';
-                button.textContent = lang.name;
-                button.dataset.langId = lang.id;
-                tabButtons.appendChild(button);
+                const tabButtons = document.createElement('div');
+                tabButtons.className = 'tab-buttons';
+                const tabContent = document.createElement('div');
+                tabContent.className = 'tab-content';
 
-                // Create Panel
-                const panel = document.createElement('div');
-                panel.className = 'tab-panel';
-                panel.dataset.langId = lang.id;
-                panel.innerHTML = `
-                    <div class="form-group">
-                        <label for="shortDetail-${lang.id}">ShortDetail</label>
-                        <textarea id="shortDetail-${lang.id}" data-field="shortDetail" placeholder="Enter ShortDetail for ${lang.name}..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="longDetail-${lang.id}">LongDetail (HTML allowed)</label>
-                        <textarea id="longDetail-${lang.id}" data-field="longDetail" placeholder="Enter LongDetail for ${lang.name}..."></textarea>
-                    </div>
-                `;
-                tabContent.appendChild(panel);
+                groupedLanguages.forEach((group, index) => {
+                    const groupId = group.ids.join(',');
+                    const displayName = group.ids.length > 1 ? `${group.name} (${group.ids.join(', ')})` : group.name;
 
-                if (index === 0) {
-                    button.classList.add('active');
-                    panel.classList.add('active');
-                }
-            });
+                    const button = document.createElement('button');
+                    button.className = 'tab-button';
+                    button.textContent = displayName;
+                    button.dataset.langIds = groupId;
+                    tabButtons.appendChild(button);
 
-            tabsContainer.appendChild(tabButtons);
-            tabsContainer.appendChild(tabContent);
+                    const panel = document.createElement('div');
+                    panel.className = 'tab-panel';
+                    panel.dataset.langIds = groupId;
+                    panel.innerHTML = `
+                        <div class="form-group">
+                            <label for="shortDetail-${groupId}">ShortDetail</label>
+                            <textarea id="shortDetail-${groupId}" data-field="shortDetail" placeholder="Enter ShortDetail for ${group.name}..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="longDetail-${groupId}">LongDetail (HTML allowed)</label>
+                            <textarea id="longDetail-${groupId}" data-field="longDetail" placeholder="Enter LongDetail for ${group.name}..."></textarea>
+                        </div>
+                    `;
+                    tabContent.appendChild(panel);
 
-            // Tab switching logic
-            tabButtons.addEventListener('click', (e) => {
-                if (e.target.classList.contains('tab-button')) {
-                    const targetLangId = e.target.dataset.langId;
-                    
-                    tabButtons.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                    tabContent.querySelectorAll('.tab-panel').forEach(pnl => pnl.classList.remove('active'));
+                    if (index === 0) {
+                        button.classList.add('active');
+                        panel.classList.add('active');
+                    }
+                });
 
-                    e.target.classList.add('active');
-                    tabContent.querySelector(`.tab-panel[data-lang-id="${targetLangId}"]`).classList.add('active');
-                }
-            });
+                tabsContainer.appendChild(tabButtons);
+                tabsContainer.appendChild(tabContent);
+
+                tabButtons.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('tab-button')) {
+                        const targetLangIds = e.target.dataset.langIds;
+                        
+                        tabButtons.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                        tabContent.querySelectorAll('.tab-panel').forEach(pnl => pnl.classList.remove('active'));
+
+                        e.target.classList.add('active');
+                        tabContent.querySelector(`.tab-panel[data-lang-ids="${targetLangIds}"]`).classList.add('active');
+                    }
+                });
+            }
+
+            function updateLanguageUI(region) {
+                const languages = languageDataSets[region] || [];
+                
+                const grouped = languages.reduce((acc, lang) => {
+                    const baseName = lang.name.split(' - ')[0].replace('-', ' ');
+                    let group = acc.find(g => g.name === baseName);
+                    if (!group) {
+                        group = { name: baseName, ids: [], originalNames: [] };
+                        acc.push(group);
+                    }
+                    group.ids.push(lang.id);
+                    group.originalNames.push(lang.name);
+                    return acc;
+                }, []);
+
+                grouped.sort((a, b) => a.name.localeCompare(b.name));
+                currentGroupedLanguages = grouped;
+                setupTabs(currentGroupedLanguages);
+            }
 
             // Function to escape single quotes for SQL
             const escapeSql = (str) => str.replace(/'/g, "''");
 
-            const STORAGE_KEY = 'amareScriptHistory';
+            const STORAGE_KEY = 'amareScriptHistory_v2'; // Changed key for new data structure
 
             const renderHistory = () => {
                 historyList.innerHTML = '';
@@ -406,9 +476,7 @@
 
             const saveToHistory = (data) => {
                 let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-                // Add new item to the beginning of the array
                 history.unshift(data);
-                // Keep history to a reasonable size, e.g., 20 items
                 if (history.length > 20) {
                     history.pop();
                 }
@@ -422,11 +490,16 @@
                 if (item) {
                     document.getElementById('itemId').value = item.itemId;
                     document.getElementById('itemDescription').value = item.itemDescription;
-                    item.languageData.forEach(langData => {
-                        const shortDetailEl = document.getElementById(`shortDetail-${langData.id}`);
-                        const longDetailEl = document.getElementById(`longDetail-${langData.id}`);
-                        if (shortDetailEl) shortDetailEl.value = langData.shortDetail;
-                        if (longDetailEl) longDetailEl.value = langData.longDetail;
+                    
+                    // Clear all textareas first
+                    document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+
+                    item.languageData.forEach(groupData => {
+                        const groupId = groupData.ids.join(',');
+                        const shortDetailEl = document.getElementById(`shortDetail-${groupId}`);
+                        const longDetailEl = document.getElementById(`longDetail-${groupId}`);
+                        if (shortDetailEl) shortDetailEl.value = groupData.shortDetail;
+                        if (longDetailEl) longDetailEl.value = groupData.longDetail;
                     });
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
@@ -451,15 +524,16 @@
                 let scripts = `-- Scripts generated for ItemID: ${itemId}\n\n`;
                 let scriptGenerated = false;
                 const languageDataForHistory = [];
-
-                languages.forEach(lang => {
-                    const shortDetail = document.getElementById(`shortDetail-${lang.id}`).value;
-                    let longDetail = document.getElementById(`longDetail-${lang.id}`).value;
+                
+                currentGroupedLanguages.forEach(group => {
+                    const groupId = group.ids.join(',');
+                    const shortDetail = document.getElementById(`shortDetail-${groupId}`).value;
+                    let longDetail = document.getElementById(`longDetail-${groupId}`).value;
 
                     if (shortDetail.trim() !== '') {
                         scriptGenerated = true;
                         languageDataForHistory.push({
-                            id: lang.id,
+                            ids: group.ids,
                             shortDetail: shortDetail,
                             longDetail: longDetail
                         });
@@ -469,11 +543,14 @@
                             longDetail = `<p>${trimmedLongDetail}</p>`;
                         }
 
-                        scripts += `-- Language: ${lang.name} (${lang.id})\n`;
-                        scripts += `INSERT INTO [AmareReporting].[ExigoWebContext].[AmareItemLanguages] 
+                        group.ids.forEach((langId, index) => {
+                            const originalName = group.originalNames[index];
+                            scripts += `-- Language: ${originalName} (${langId})\n`;
+                            scripts += `INSERT INTO [AmareReporting].[ExigoWebContext].[AmareItemLanguages] 
     ([ItemID], [LanguageID], [ItemDescription], [ShortDetail], [LongDetail])
 VALUES 
-    (${itemId}, ${lang.id}, N'${escapeSql(itemDescription)}', N'${escapeSql(shortDetail)}', N'${escapeSql(longDetail)}');\n\n`;
+    (${itemId}, ${langId}, N'${escapeSql(itemDescription)}', N'${escapeSql(shortDetail)}', N'${escapeSql(longDetail)}');\n\n`;
+                        });
                     }
                 });
 
@@ -526,9 +603,15 @@ VALUES
                 document.querySelectorAll('textarea').forEach(ta => ta.value = '');
             });
 
+            regionSelect.addEventListener('change', (e) => {
+                updateLanguageUI(e.target.value);
+            });
+
             renderHistory(); // Initial render on page load
+            updateLanguageUI(regionSelect.value); // Initial UI setup based on default region
         });
     </script>
 
 </body>
 </html>
+>
